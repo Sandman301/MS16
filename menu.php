@@ -5,7 +5,7 @@ $kasutaja = "<b> Carlo Randar Aavekukk </b>";
 
 $menu_begin= '<div>'.$kasutaja;
 
-$menu_arr = array('Masiivid','Andmebaas','File','Hint','Methods');
+$menu_arr = array('Masiivid','Andmebaas','File','Hint','Methods','mysql');
 
 $menu_end='</div>';
 

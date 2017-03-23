@@ -9,8 +9,8 @@
 <body>  
     <h1> Welcome to my homepage and stuff</h1>
 <?php
-require_once('mysql.php');
-require ('function.php');
+// require_once('mysql.php');
+require ('Function.php');
 require ('menu.php');
 
     

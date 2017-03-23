@@ -1,8 +1,7 @@
 <?php
 
 function greeting($input = "ebamäärast"){
-    
-    echo "Tere $input<br>";
+    echo "Tere $input <br>";
 }
 
 function home(){
