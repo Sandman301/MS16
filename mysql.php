@@ -27,6 +27,9 @@ if (!$conn){
 
 //pärime andmebaasist andmeid (Kõik korraga)
 
+
+
+
 function my_query($conn){
 $sql = "SELECT ID, Nimi, Perenimi, Isikukood, Aeg FROM ms16.inimesed";
 $result = $conn -> query($sql);
@@ -44,14 +47,38 @@ if ($result->num_rows > 0){
 
 }
 
-function my_insert($conn){
-    
-    $sql = "INSERT INTO ms16.inimesed (Nime, Perenimi, Isikukood)
-    VALUES ('Peeter','Toomas','37501014321')";
-    $result= $conn->query($sql);
+//otsime parameetri järgi
+function search_by($conn){
+    $sql = "SELECT * FROM ms16.inimesed WHERE ".
+        $_GET['PARAM']."='".$_GET['ID']."'";
+    $result = $conn -> query($sql);
+
+if ($result->num_rows > 0){
+    while($row = $result->fetch_assoc()) {
+        echo "<br> ID: ".$row["ID"].
+             " Nimi: ".$row["Nimi"].
+             " Perenimi: ".$row["Perenimi"].
+             " Isikukood: ".$row["Isikukood"].
+             " ja sisestus aeg:".$row["Aeg"]."<br>";
+    }} else {echo "Sellist kirje ei ole!";}
 }
+
+function my_insert($conn){
+    if ($_POST['Nimi']==null OR $_POST['Isikukood']==null){   
+    echo "Nimi ja Isikukood on kohustlikud"; } else {
+    $sql = "INSERT INTO ms16.inimesed (Nime, Perenimi, Isikukood) VALUES('".$_POST['Nimi']."',
+                                                                         '".$_POST['Perenimi']."',
+                                                                         '".$_POST['Isikukood']."')";
+        htmlentities($sql);
+        echo $sql;
+        $result= $conn->query($sql);
+}
+}
+
+
 function my_delete($conn){
-    $sql = "DELETE FROM ms16.inimesed WHERE name = 'Carlo'";
+    $sql = "DELETE FROM ms16.inimesed WHERE ".
+        $_POST['PARAM']."='".$_POST['ID']."'";
     $result= $conn->query($sql);
 }
 
@@ -61,6 +88,11 @@ function my_close($conn){
 $conn->close();
 }
 
+
+// Buttons!
+
+
+
 function show_button($conn){
     echo "<input type='submit' name='show' value='Näita kõiki'>";
     if(isset($_POST['show'])){ 
@@ -68,6 +100,14 @@ function show_button($conn){
     }else { echo "ei õnnestunnud";}
     }
 
+//Parameetri järgi otsimise nupp
+function search_by_button($conn){
+    echo "<input type='submit' name='search' value='Otsi parameetri järgi'>";
+    if(isset($_GET['search'])){ 
+        if ($_GET['ID']==null){
+            echo "Lather ei tohi olla tühjad";
+        } else {search_by($conn);}
+}}
 
 function add_button($conn){
     echo "<input type='submit' name='add' value='Lisa Kirje'>";
@@ -93,17 +133,3 @@ function delete_button($conn){
 
 
 ?>
-<!doctype html>
-<html>
-    <head>
-    </head>
-    <body>
-        <form action='' method='post'>
-        <ul>
-            <li><?php show_button($conn); ?></li>
-            <li><?php add_button($conn); ?></li>
-            <li><?php delete_button($conn); ?></li>
-        </ul>
-        </form>
-    </body>
-</html>
